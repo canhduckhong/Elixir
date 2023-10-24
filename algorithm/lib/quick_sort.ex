@@ -18,7 +18,7 @@ defmodule QuickSort do
     [2, 1, 5, 4, 3] => [1, 2, 3, 4, 5]
     Complexity: O(n log n)
   """
-  def sort(list = []) do
+  def sort(_list = []) do
     []
   end
 
