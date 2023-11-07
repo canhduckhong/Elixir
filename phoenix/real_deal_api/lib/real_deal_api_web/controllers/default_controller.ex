@@ -1,7 +1,7 @@
 defmodule RealDealApiWeb.DefaultController do
-  use RealDealApiWeb, :controller
+	use RealDealApiWeb, :controller
 
-  def index(conn, _params) do
-    text conn, "The Real deal api is live - #{Mix.env()}"
-  end
+	def index(conn, _params) do
+		text conn, "The Real deal api is live - #{Mix.env()}"
+	end
 end
