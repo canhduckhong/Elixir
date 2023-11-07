@@ -1,39 +1,32 @@
 defmodule RealDealApi.Schema.AccountTest do
-  use ExUnit.Case
-  alias Ecto.Changeset
-  alias RealDealApi.Accounts.Account
+	use RealDealApi.Support.SchemaCase
+  	alias RealDealApi.Accounts.Account
 
-  @expected_fields_with_types [
-    {:id, :binary_id},
-    {:email, :string},
-    {:hash_password, :string},
-    {:inserted_at, :naive_datetime},
-    {:updated_at, :naive_datetime}
-  ]
+	@expected_fields_with_types [
+		{:id, :binary_id},
+		{:email, :string},
+		{:hash_password, :string},
+		{:inserted_at, :naive_datetime},
+		{:updated_at, :naive_datetime}
+	]
 
-  @optional [:id, :inserted_at, :updated_at]
+  	@optional [:id, :inserted_at, :updated_at]
 
-  describe "account fields and types" do
-    test "it has the correct fields and types" do
-      actual_fields_with_types =
-        for field <- Account.__schema__(:fields) do
-          type = Account.__schema__(:type, field)
-          {field, type}
-        end
+	describe "account fields and types" do
+		test "it has the correct fields and types" do
+		actual_fields_with_types =
+			for field <- Account.__schema__(:fields) do
+			type = Account.__schema__(:type, field)
+			{field, type}
+			end
 
-        assert MapSet.new(actual_fields_with_types) == MapSet.new(@expected_fields_with_types)
-    end
-  end
+			assert MapSet.new(actual_fields_with_types) == MapSet.new(@expected_fields_with_types)
+		end
+	end
 
 	describe "changeset/2" do
 		test "success: returns a valid changeset when given valid arguments" do
-			valid_params = %{
-				"id" => Ecto.UUID.generate(),
-				"email" => "test@email.com",
-				"hash_password" => "test password",
-				"inserted_at" => NaiveDateTime.local_now(),
-				"updated_at" => NaiveDateTime.local_now()
-			}
+			valid_params = valid_params(@expected_fields_with_types)
 			changeset = Account.changeset(%Account{}, valid_params)
 
 			assert %Changeset{valid?: true, changes: changes} = changeset
@@ -51,13 +44,7 @@ defmodule RealDealApi.Schema.AccountTest do
 		end
 
 		test "error: returns an error changeset when given un-castable values" do
-			invalid_params = %{
-				"id" => NaiveDateTime.local_now(),
-				"email" => NaiveDateTime.local_now(),
-				"hash_password" => NaiveDateTime.local_now(),
-				"inserted_at" => "a random string",
-				"updated_at" => "a random string"
-			}
+			invalid_params = invalid_params(@expected_fields_with_types)
 			assert %Changeset{valid?: false, errors: errors} = Account.changeset(%Account{}, invalid_params)
 
 			for {field, _} <- @expected_fields_with_types do
