@@ -9,11 +9,9 @@ defmodule RealDealApi.AccountsTest do
 	describe "create_account/1" do
 		test "success: it inserts an account in the db and returns the account" do
 			params = Factory.string_params_for(:account)
-			dbg params
 
 			assert {:ok, %Account{} = returned_account} = Accounts.create_account(params)
 			account_from_db = Repo.get(Account, returned_account.id)
-			dbg account_from_db
 			assert returned_account == account_from_db
 
 			mutated = ["hash_password"]
@@ -26,6 +24,20 @@ defmodule RealDealApi.AccountsTest do
 			end
 			assert Bcrypt.verify_pass(params["hash_password"], returned_account.hash_password),
 				"Password: #{inspect(params["hash_password"])} does not match \nhash:#{inspect(returned_account)}"
+		end
+	end
+
+	describe "get_account/1" do
+		test "success: it returns an account when given a vliad UUID" do
+			existing_account = Factory.insert(:account)
+			assert returned_account = Accounts.get_account!(existing_account.id)
+			assert returned_account == existing_account
+		end
+
+		test "error: raise a Ecto.NoResultsError when an account doesn't exist" do
+			assert_raise Ecto.NoResultsError, fn ->
+				Accounts.get_account!(Ecto.UUID.autogenerate())
+			end
 		end
 	end
 end
