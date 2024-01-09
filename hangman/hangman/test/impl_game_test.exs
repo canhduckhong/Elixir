@@ -111,8 +111,6 @@ defmodule HangmanImplGameTest do
 
   defp check_one_move([guess, state, turns, letters, used], game) do
     { game, tally} = Game.make_move(game, guess)
-    dbg used
-    dbg tally
     assert tally.game_state == state
     assert tally.turns_left == turns
     assert tally.letters    == letters
